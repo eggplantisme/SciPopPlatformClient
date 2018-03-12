@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">SciPopPlatform</string>
+    <string name="username">用户名</string>
+    <string name="password">密码</string>
+    <string name="signin">登陆</string>
+    <string name="goSignup">前往注册</string>
+    <string name="signup">注册</string>
+
+    <string name="normalUser">普通会员</string>
+    <string name="professionUser">专家会员</string>
+    <string name="baseUser">基地会员</string>
+
+    <string name="usernamePattern">^.{1,100}$</string>
+    <string name="passwordPattern">^.{6,100}$</string>
+    <string name="phonePattern">^\\d{11}$</string>
+
+    <string name="server">http://192.168.199.127:8080/SciencePop</string>
+
+    <string name="confirmPass">确认密码</string>
+    <string name="phone">电话号码</string>
+    <string name="backSignin">返回登陆</string>
+</resources>
