@@ -19,4 +19,8 @@
     <string name="confirmPass">确认密码</string>
     <string name="phone">电话号码</string>
     <string name="backSignin">返回登陆</string>
+    <string name="sciInfoText">信息列表</string>
+    <string name="sciBaseText">基地列表</string>
+    <string name="title_activity_sci_info_show">SciInfoShow</string>
+    <string name="title_activity_sci_base_show">SciBaseShow</string>
 </resources>

@@ -30,5 +30,8 @@ public class Configure {
     public static final int DIFFERENT_PASS = 9;
     public static final int NEED_WAIT = 8;
 
+    public static final int SCIINFO = 0;
+    public static final int SCIBASE = 1;
+
 
 }

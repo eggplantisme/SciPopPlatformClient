@@ -28,6 +28,8 @@ import java.util.regex.Pattern;
 
 import static android.R.id.edit;
 import static com.eggplant.admin.scipopplatform.Configure.*;
+import static com.eggplant.admin.scipopplatform.HttpHelper.Connect;
+import static com.eggplant.admin.scipopplatform.HttpHelper.POST;
 import static com.eggplant.admin.scipopplatform.HttpHelper.isNetworkAvailable;
 import static com.eggplant.admin.scipopplatform.HttpHelper.COOKIE;
 import static com.eggplant.admin.scipopplatform.R.id.userClass;
@@ -51,84 +53,62 @@ public class SignInActivity extends AppCompatActivity {
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                HttpURLConnection connection = null;
+                String body = "username=" + name + "&password=" + pass + "&phone=" + "" + "&userclass=" + userClass;
+                JSONObject response = null;
                 try {
-                    URL url = new URL(getResources().getString(R.string.server) + "/login");
-                    connection = (HttpURLConnection) (url.openConnection());
-                    connection.setRequestMethod("POST");
-                    connection.setConnectTimeout(10 * 1000);
-                    String body = "username=" + name + "&password=" + pass + "&phone=" + "" + "&userclass=" + userClass;
-                    connection.setRequestProperty("Content-Length", String.valueOf(body.length()));
-                    //设置请求内容
-                    connection.setDoOutput(true);
-                    connection.getOutputStream().write(body.getBytes());
-                    //连接
-                    connection.connect();
-                    int code = connection.getResponseCode();
-                    /*
-                    发送message给handler
-                     */
-                    Message message = Message.obtain(handler);
-                    if (code == connection.HTTP_OK) {
-                        //解析获得数据
-                        InputStream in = connection.getInputStream();
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                        StringBuilder response = new StringBuilder();
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            response.append(line);
-                        }
-                        //测试展示
-                        Log.v("res", response.toString());
-                        //获得Cookie
-                        COOKIE = connection.getHeaderField("Set-Cookie");
-                        JSONObject jsonObject = new JSONObject(response.toString());
-                        //处理返回数据
-                        int info = (int)jsonObject.get("info");
-                        switch (info) {
-                            case 2:
-                                message.what = WRONG_NAMEFORMAT;
-                                message.sendToTarget();
-                                break;
-                            case 3:
-                                message.what = WRONG_PASSFORMAT;
-                                message.sendToTarget();
-                                break;
-                            case 5:
-                                message.what = WRONG_CLASS;
-                                message.sendToTarget();
-                                break;
-                            case 6:
-                                message.what = WRONG_NAME;
-                                message.sendToTarget();
-                                break;
-                            case 7:
-                                message.what = WRONG_PASS;
-                                message.sendToTarget();
-                                break;
-                            case 1:
-                                message.what = RIGHT;
-                                Bundle userInfo = new Bundle();
-                                userInfo.putString("name",name);
-                                userInfo.putString("pass",pass);
-                                userInfo.putInt("class",userClass);
-                                message.setData(userInfo);
-                                message.sendToTarget();
-                                break;
-                            default:
-                                message.what = UNKNOWN_WRONG;
-                                message.sendToTarget();
-                                break;
-                        }
-                    } else {
-                        message.what = WRONG_CODE;
-                        message.sendToTarget();
-                    }
+                    response = new JSONObject(Connect(getResources().getString(R.string.server) + "/login", body, POST));
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                } finally {
-                    if (connection != null) {
-                        connection.disconnect();
+                }
+                /*
+                 发送message给handler
+                */
+                Message message = Message.obtain(handler);
+                if (response == null) {
+                    message.what = WRONG_CODE;
+                    message.sendToTarget();
+                } else {
+                    //处理返回数据
+                    int info = UNKNOWN_WRONG;
+                    try {
+                        info = (int)response.get("info");
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    switch (info) {
+                        case 2:
+                            message.what = WRONG_NAMEFORMAT;
+                            message.sendToTarget();
+                            break;
+                        case 3:
+                            message.what = WRONG_PASSFORMAT;
+                            message.sendToTarget();
+                            break;
+                        case 5:
+                            message.what = WRONG_CLASS;
+                            message.sendToTarget();
+                            break;
+                        case 6:
+                            message.what = WRONG_NAME;
+                            message.sendToTarget();
+                            break;
+                        case 7:
+                            message.what = WRONG_PASS;
+                            message.sendToTarget();
+                            break;
+                        case 1:
+                            message.what = RIGHT;
+                            Bundle userInfo = new Bundle();
+                            userInfo.putString("name",name);
+                            userInfo.putString("pass",pass);
+                            userInfo.putInt("class",userClass);
+                            message.setData(userInfo);
+                            message.sendToTarget();
+                            break;
+                        default:
+                            message.what = UNKNOWN_WRONG;
+                            message.sendToTarget();
+                            break;
                     }
                 }
             }
@@ -215,6 +195,9 @@ public class SignInActivity extends AppCompatActivity {
                         password.setText("");
                         Toast.makeText(getApplicationContext(), "密码不正确", Toast.LENGTH_SHORT).show();
                         break;
+                    case WRONG_CODE:
+                        Toast.makeText(getApplicationContext(), "网络连接错误", Toast.LENGTH_SHORT).show();
+                        break;
                     case RIGHT:
                         Bundle userInfo = message.getData();
                         /*
@@ -225,7 +208,11 @@ public class SignInActivity extends AppCompatActivity {
                         editor.putString("name", userInfo.getString("name"));
                         editor.putString("pass", userInfo.getString("pass"));
                         editor.commit();
-                        //去科普信息界面TODO
+                        /*
+                        转到主页面
+                         */
+                        Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+                        SignInActivity.this.startActivity(intent);
                         break;
                     default:
                         message.what = UNKNOWN_WRONG;
