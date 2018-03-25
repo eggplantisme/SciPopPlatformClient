@@ -9,55 +9,73 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.eggplant.admin.scipopplatform.SignInActivity">
-
-    <EditText
-        android:id="@+id/username"
-        android:layout_width="match_parent"
-        android:inputType="text"
-        android:hint="@string/username"
-        android:layout_height="wrap_content" />
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="match_parent"
-        android:inputType="textPassword"
-        android:hint="@string/password"
-        android:layout_height="wrap_content" />
-    <RadioGroup
+    <ImageView
+        android:layout_marginTop="20dp"
+        android:src="@mipmap/sci_pop"
+        android:scaleType="center"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="2"
+        android:scaleY="2"/>
+    <LinearLayout
+        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/userClass"
-        android:orientation="horizontal">
-        <RadioButton
-            android:layout_width="wrap_content"
+        android:orientation="vertical">
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:inputType="text"
+            android:hint="@string/username"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:inputType="textPassword"
+            android:hint="@string/password"
+            android:layout_height="wrap_content" />
+        <RadioGroup
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/normal"
-            android:text="@string/normalUser"
-            android:checked="true"/>
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/profession"
-            android:text="@string/professionUser"
-            android:checked="false"/>
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/base"
-            android:text="@string/baseUser"
-            android:checked="false"/>
-    </RadioGroup>
+            android:gravity="center"
+            android:id="@+id/userClass"
+            android:orientation="horizontal">
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/normal"
+                android:text="@string/normalUser"
+                android:checked="true"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/profession"
+                android:text="@string/professionUser"
+                android:checked="false"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/base"
+                android:text="@string/baseUser"
+                android:checked="false"/>
+        </RadioGroup>
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center">
         <Button
             android:id="@+id/signin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:text="@string/signin"/>
         <Button
             android:id="@+id/signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:text="@string/goSignup"/>
     </LinearLayout>
 </LinearLayout>

@@ -55,6 +55,7 @@ public class HttpHelper {
 
     public static int GET = 0;
     public static int POST = 1;
+
     /*
     Http连接
     返回Json数据

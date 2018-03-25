@@ -1,6 +1,7 @@
 package com.eggplant.admin.scipopplatform;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,8 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.baoyz.widget.PullRefreshLayout;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -53,12 +56,15 @@ public class MainFragment extends Fragment {
     private int fragStyle;
     private JSONArray responseData = null;
 
-    private Context context;
+    private Activity context;
+
+    private PullRefreshLayout pullRefreshLayout;
+
     public MainFragment(String url, int FragmentStyle) {
         this.url = url;
         this.fragStyle = FragmentStyle;
     }
-    public void connect(final String url) {
+    protected void connect(final String url) {
         /*
         网络连接的线程
          */
@@ -102,12 +108,23 @@ public class MainFragment extends Fragment {
                         break;
                     case RIGHT:
                         loadList(view.getContext(), mainList, responseData);
+                        Toast.makeText(context, "加载数据成功", Toast.LENGTH_SHORT).show();
+                        pullRefreshLayout.setRefreshing(false);
                         break;
                     default:
                         break;
                 }
             }
         };
+
+        pullRefreshLayout = (PullRefreshLayout)view.findViewById(R.id.main_refresh);
+        pullRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
+
         return view;
     }
     /*
@@ -151,8 +168,13 @@ public class MainFragment extends Fragment {
                 context.startActivity(intent);
             }
         });
-
-
+    }
+    /*
+    刷新操作
+    耗时操作
+     */
+    public void refresh() {
+        connect(url);
     }
 
 }

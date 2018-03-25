@@ -215,8 +215,7 @@ public class SignInActivity extends AppCompatActivity {
                         SignInActivity.this.startActivity(intent);
                         break;
                     default:
-                        message.what = UNKNOWN_WRONG;
-                        message.sendToTarget();
+                        Toast.makeText(getApplicationContext(), "未知错误", Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
