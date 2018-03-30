@@ -55,6 +55,7 @@ public class MainFragment extends Fragment {
     private String url;
     private int fragStyle;
     private JSONArray responseData = null;
+    final private List<Map<String, Object>> data = new ArrayList<>();
 
     private Activity context;
 
@@ -131,7 +132,7 @@ public class MainFragment extends Fragment {
     将网络返回数据加载到列表中
      */
     protected void loadList(final Context context, ListView mainList, JSONArray responseData) {
-        final List<Map<String, Object>> data = new ArrayList<>();
+
         try {
             for (int i = 0; i < responseData.length(); i++) {
                 JSONObject jsonObject;
@@ -144,6 +145,7 @@ public class MainFragment extends Fragment {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
         SimpleAdapter simpleAdapter = new SimpleAdapter(context, data, R.layout.main_item,
             new String[] {"title"}, new int[] {R.id.title});
         mainList.setAdapter(simpleAdapter);
@@ -171,7 +173,6 @@ public class MainFragment extends Fragment {
     }
     /*
     刷新操作
-    耗时操作
      */
     public void refresh() {
         connect(url);

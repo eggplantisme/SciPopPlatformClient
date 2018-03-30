@@ -56,6 +56,8 @@ public class HttpHelper {
     public static int GET = 0;
     public static int POST = 1;
 
+    private static String sessionId = null;
+
     /*
     Http连接
     返回Json数据
@@ -69,12 +71,13 @@ public class HttpHelper {
         HttpURLConnection connection = null;
         try {
             URL _url = new URL(url);
+
             connection = (HttpURLConnection) (_url.openConnection());
-            /*
-            负责自动保存cookie，以及返回cookie
-             */
-            CookieManager manager = new CookieManager();
-            CookieHandler.setDefault(manager);
+
+            if (sessionId != null) {
+                Log.v("reqId", sessionId);
+                connection.setRequestProperty("Cookie", sessionId);
+            }
             if (way == GET) {
                 connection.setRequestMethod("GET");
                 connection.setConnectTimeout(10 * 1000);
@@ -105,7 +108,10 @@ public class HttpHelper {
                 Log.v("res", response.toString());
                 //获得Cookie
                 COOKIE = connection.getHeaderField("Set-Cookie");
-                Log.v("cookie", COOKIE);
+                if (COOKIE != null) {
+                    sessionId = COOKIE.substring(0, COOKIE.indexOf(";"));
+                }
+                Log.v("cookieId", sessionId);
                 return response.toString();
             } else {
                 return null;

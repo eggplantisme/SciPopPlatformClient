@@ -2,8 +2,17 @@ package com.eggplant.admin.scipopplatform;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -11,13 +20,26 @@ import android.widget.Toast;
 
 import com.baoyz.widget.PullRefreshLayout;
 
+import static android.R.attr.id;
+import static com.eggplant.admin.scipopplatform.Configure.BASE;
+import static com.eggplant.admin.scipopplatform.Configure.NORMAL;
+import static com.eggplant.admin.scipopplatform.Configure.PROFESSION;
 import static com.eggplant.admin.scipopplatform.Configure.SCIBASE;
 import static com.eggplant.admin.scipopplatform.Configure.SCIINFO;
 
 
+
+
 public class MainActivity extends AppCompatActivity {
+    public SharedPreferences sharedPreferences;
+    public static final String PREFERENCE_NAME = "user";
+    public static final int MODE = MODE_PRIVATE;
+
     private TextView sci_info;
     private TextView sci_base;
+    private Toolbar top_title;
+    private DrawerLayout drawerLayout;
+    private NavigationView leftDrawer;
 
     private FrameLayout main_content;
 
@@ -26,14 +48,16 @@ public class MainActivity extends AppCompatActivity {
     private FragmentManager fragmentManager;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        sharedPreferences = getSharedPreferences(PREFERENCE_NAME, MODE);
+
         fragmentManager = getFragmentManager();
         bindViews();
+        loadLeftDrawer();
+
         /*
         初始获取科普信息的列表
          */
@@ -42,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
         sci_info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 getSciInfoList();
             }
         });
@@ -50,18 +73,142 @@ public class MainActivity extends AppCompatActivity {
         sci_base.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 getSciBaseList();
             }
         });
 
+        /*
+        显示侧滑菜单
+         */
+        top_title.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                } else {
+                    drawerLayout.openDrawer(GravityCompat.START);
+                }
+            }
+        });
+        /*
+        右上角按钮点击
+        */
+        top_title.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int userClass = sharedPreferences.getInt("class", 0);//如果没有class， 默认给0
+                switch (userClass) {
+                    case NORMAL:
+                        break;
+                    case PROFESSION:
+                        //TODO 根据不同角色，选择menu后，设定按钮功能，需要在管理员功能完善之后实现
+                        switch (item.getItemId()) {
+                            case R.id.pro_create:
+                                Toast.makeText(MainActivity.this, "创建功能暂时没做", Toast.LENGTH_SHORT).show();
+                                break;
+                            case R.id.pro_change:
+                                break;
+                            case R.id.pro_delete:
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    case BASE:
+                        switch (item.getItemId()) {
+                            case R.id.base_create:
+                                break;
+                            case R.id.base_change:
+                                break;
+                            case R.id.base_delete:
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
 
+
+        /*
+        侧滑菜单具体内容
+         */
+        leftDrawer.setItemIconTintList(null);//为了图标显示
+        leftDrawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                switch (id) {
+                    case R.id.score:
+                        //TODO 积分功能
+                        Toast.makeText(MainActivity.this, "积分功能暂时没做", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.sign_out:
+                        //清除数据
+                        sharedPreferences.edit().clear().commit();
+                        Intent intent = new Intent(MainActivity.this, SignInActivity.class);
+                        MainActivity.this.startActivity(intent);
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
+
+
+
+    }
+
+    /*
+    根据用户类别选择不同menu
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        int userClass = sharedPreferences.getInt("class", 0);//如果没有class， 默认给0
+        switch (userClass) {
+            case NORMAL:
+                break;
+            case PROFESSION:
+                getMenuInflater().inflate(R.menu.pro_main_menu, menu);
+                break;
+            case BASE:
+                getMenuInflater().inflate(R.menu.base_main_menu, menu);
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
+
+
+    /*
+    TODO
+     这里只有用户姓名的获取
+     至于图片和分数，电话信息服务端没有接口
+     暂时搁置
+     图片还没做*/
+    private void loadLeftDrawer() {
+        String name = sharedPreferences.getString("name", null);
+        //动态加载头部
+        View headerLayout = leftDrawer.inflateHeaderView(R.layout.drawer_head);
+        TextView left_draw_name = (TextView)headerLayout.findViewById(R.id.person_name);
+        left_draw_name.setText(name);
     }
 
     private void bindViews() {
         sci_info = (TextView)findViewById(R.id.sciInfo);
         sci_base = (TextView)findViewById(R.id.sciBase);
         main_content = (FrameLayout)findViewById(R.id.main_content);
+        top_title = (Toolbar)findViewById(R.id.top_barText);
+        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        leftDrawer = (NavigationView)findViewById(R.id.left_drawer);
 
     }
 
@@ -76,6 +223,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getSciInfoList() {
+        top_title.setTitle("科普信息");
+
         resetSelect();
         sci_info.setSelected(true);
 
@@ -84,7 +233,6 @@ public class MainActivity extends AppCompatActivity {
         if (sciInfoFrag == null) {
             sciInfoFrag = new MainFragment(getResources().getString(R.string.server) + "/getTitleList", SCIINFO);
             fragmentTransaction.add(R.id.main_content, sciInfoFrag);
-            Toast.makeText(getApplicationContext(), "创建frag", Toast.LENGTH_SHORT).show();
         } else {
             sciInfoFrag.refresh();
             fragmentTransaction.show(sciInfoFrag);
@@ -92,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
     private void getSciBaseList() {
+        top_title.setTitle("基地信息");
         resetSelect();
         sci_base.setSelected(true);
 

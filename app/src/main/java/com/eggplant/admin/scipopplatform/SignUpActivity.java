@@ -29,8 +29,11 @@ import java.util.regex.Pattern;
 
 import static android.R.id.edit;
 import static android.R.id.message;
+import static com.eggplant.admin.scipopplatform.Configure.BASE;
 import static com.eggplant.admin.scipopplatform.Configure.DIFFERENT_PASS;
 import static com.eggplant.admin.scipopplatform.Configure.NEED_WAIT;
+import static com.eggplant.admin.scipopplatform.Configure.NORMAL;
+import static com.eggplant.admin.scipopplatform.Configure.PROFESSION;
 import static com.eggplant.admin.scipopplatform.Configure.REPEATEDNAME;
 import static com.eggplant.admin.scipopplatform.Configure.RIGHT;
 import static com.eggplant.admin.scipopplatform.Configure.UNKNOWN_WRONG;
@@ -178,11 +181,11 @@ public class SignUpActivity extends AppCompatActivity {
                          */
                         final int userClass;
                         if (radioGroup.getCheckedRadioButtonId() == R.id.normal) {
-                            userClass = 0;
+                            userClass = NORMAL;
                         } else if (radioGroup.getCheckedRadioButtonId() == R.id.profession) {
-                            userClass = 1;
+                            userClass = PROFESSION;
                         } else {
-                            userClass = 2;
+                            userClass = BASE;
                         }
                         if (isNetworkAvailable(SignUpActivity.this)) {
                             connect(name, pass, phone_num, userClass);
@@ -243,6 +246,7 @@ public class SignUpActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("name", userInfo.getString("name"));
                         editor.putString("pass", userInfo.getString("pass"));
+                        editor.putInt("class", userInfo.getInt("class"));
                         editor.commit();
                         /*
                         转到主页面

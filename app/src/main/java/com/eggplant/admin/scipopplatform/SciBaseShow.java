@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import static com.eggplant.admin.scipopplatform.Configure.WRONG_CODE;
 import static com.eggplant.admin.scipopplatform.Configure.RIGHT;
 import static com.eggplant.admin.scipopplatform.HttpHelper.*;
+import static com.eggplant.admin.scipopplatform.R.id.contactNumber;
 import static com.eggplant.admin.scipopplatform.R.id.main_info;
 
 public class SciBaseShow extends AppCompatActivity {
@@ -78,8 +79,8 @@ public class SciBaseShow extends AppCompatActivity {
                         try {
                             basename.setText(response.getString("baseName"));
                             mainInfo.setText(response.getString("baseInfo"));
-                            contact.setText(response.getString("contactNumber"));
-                            address.setText(response.getString("address"));
+                            contact.setText("联系方式: " + response.getString("contactNumber"));
+                            address.setText("地址: " + response.getString("address"));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -95,7 +96,7 @@ public class SciBaseShow extends AppCompatActivity {
 
     void loadView() {
         basename = (TextView)findViewById(R.id.basename);
-        contact = (TextView)findViewById(R.id.contactNumber);
+        contact = (TextView)findViewById(contactNumber);
         address = (TextView)findViewById(R.id.address);
         mainInfo = (TextView)findViewById(main_info);
     }

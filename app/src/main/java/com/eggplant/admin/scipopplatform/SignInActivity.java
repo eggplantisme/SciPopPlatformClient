@@ -16,7 +16,9 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -54,9 +56,27 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void run() {
                 String body = "username=" + name + "&password=" + pass + "&phone=" + "" + "&userclass=" + userClass;
-                JSONObject response = null;
+                JSONObject NormalUserresponse = null;
+                String res = null;
+                int info = UNKNOWN_WRONG;
                 try {
-                    response = new JSONObject(Connect(getResources().getString(R.string.server) + "/login", body, POST));
+                    res = Connect(getResources().getString(R.string.server) + "/login", body, POST);
+                    Object json = new JSONTokener(res).nextValue();
+                    //判断返回的是JsonArray还是JsonObject，以此来判断是否是管理员登陆
+                    if (json instanceof JSONObject) {
+                        NormalUserresponse = new JSONObject(res);
+                        try {
+                            info = (int)NormalUserresponse.get("info");
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                    else if(json instanceof JSONArray) {
+                        /*
+                        管理员返回的是管理员临时用户申请列表的字符串数据，直接传到AdminActivity处理就好了
+                         */
+                        info = ADMIN;
+                    }
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -64,39 +84,17 @@ public class SignInActivity extends AppCompatActivity {
                  发送message给handler
                 */
                 Message message = Message.obtain(handler);
-                if (response == null) {
+                if (res == null) {
                     message.what = WRONG_CODE;
                     message.sendToTarget();
                 } else {
                     //处理返回数据
-                    int info = UNKNOWN_WRONG;
-                    try {
-                        info = (int)response.get("info");
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
+                    /*
+                    info为返回消息标识
+                    在configure里设定好
+                     */
                     switch (info) {
-                        case 2:
-                            message.what = WRONG_NAMEFORMAT;
-                            message.sendToTarget();
-                            break;
-                        case 3:
-                            message.what = WRONG_PASSFORMAT;
-                            message.sendToTarget();
-                            break;
-                        case 5:
-                            message.what = WRONG_CLASS;
-                            message.sendToTarget();
-                            break;
-                        case 6:
-                            message.what = WRONG_NAME;
-                            message.sendToTarget();
-                            break;
-                        case 7:
-                            message.what = WRONG_PASS;
-                            message.sendToTarget();
-                            break;
-                        case 1:
+                        case RIGHT:
                             message.what = RIGHT;
                             Bundle userInfo = new Bundle();
                             userInfo.putString("name",name);
@@ -105,8 +103,16 @@ public class SignInActivity extends AppCompatActivity {
                             message.setData(userInfo);
                             message.sendToTarget();
                             break;
+                        case ADMIN:
+                            message.what = ADMIN;
+                            Bundle tempUserList = new Bundle();
+                            //传送临时用户申请列表的字符串数据
+                            tempUserList.putString("tempUserList", res);
+                            message.setData(tempUserList);
+                            message.sendToTarget();
+                            break;
                         default:
-                            message.what = UNKNOWN_WRONG;
+                            message.what = info;
                             message.sendToTarget();
                             break;
                     }
@@ -146,11 +152,11 @@ public class SignInActivity extends AppCompatActivity {
                          */
                         final int userClass;
                         if (radioGroup.getCheckedRadioButtonId() == R.id.normal) {
-                            userClass = 0;
+                            userClass = NORMAL;
                         } else if (radioGroup.getCheckedRadioButtonId() == R.id.profession) {
-                            userClass = 1;
+                            userClass = PROFESSION;
                         } else {
-                            userClass = 2;
+                            userClass = BASE;
                         }
                         if(isNetworkAvailable(SignInActivity.this)) {
                             connect(name, pass, userClass);
@@ -207,12 +213,19 @@ public class SignInActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("name", userInfo.getString("name"));
                         editor.putString("pass", userInfo.getString("pass"));
+                        editor.putInt("class", userInfo.getInt("class"));
                         editor.commit();
                         /*
                         转到主页面
                          */
                         Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                         SignInActivity.this.startActivity(intent);
+                        break;
+                    case ADMIN:
+                        Bundle tempUserList = message.getData();
+                        Intent intent1 = new Intent(SignInActivity.this, AdminActivity.class);
+                        intent1.putExtras(tempUserList);
+                        SignInActivity.this.startActivity(intent1);
                         break;
                     default:
                         Toast.makeText(getApplicationContext(), "未知错误", Toast.LENGTH_SHORT).show();

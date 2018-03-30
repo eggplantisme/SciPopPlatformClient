@@ -6,6 +6,7 @@ package com.eggplant.admin.scipopplatform;
 
 public class Configure {
     /*
+    客户端服务端的约定码
     -1 表示返回码错误
     0 注册时名字重复
     1 返回正确
@@ -29,9 +30,22 @@ public class Configure {
     public static final int UNKNOWN_WRONG = -10;
     public static final int DIFFERENT_PASS = 9;
     public static final int NEED_WAIT = 8;
+    public static final int ADMIN = 11;
+    public static final int NOT_ADMIN = 12;
 
+
+    /*
+    科普信息和基地的区分
+     */
     public static final int SCIINFO = 0;
     public static final int SCIBASE = 1;
 
+
+    /*
+    用户类别
+     */
+    public static final int NORMAL = 0;
+    public static final int PROFESSION = 1;
+    public static final int BASE = 2;
 
 }

@@ -14,12 +14,8 @@
 
         <TextView
             android:id="@+id/basename"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:text="信息"
-            android:textColor="@color/colorAccent" />
+            style="@style/TitleStyle"
+            android:text="信息" />
 
         <View
             android:id="@+id/top_view"
@@ -42,14 +38,17 @@
                 android:orientation="vertical">
                 <TextView
                     android:id="@+id/contactNumber"
+                    android:padding="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:id="@+id/address"
+                    android:padding="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:id="@+id/main_info"
+                    android:padding="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>

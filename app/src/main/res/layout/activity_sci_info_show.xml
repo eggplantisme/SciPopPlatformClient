@@ -14,12 +14,8 @@
 
         <TextView
             android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:text="信息"
-            android:textColor="@color/colorAccent" />
+            style="@style/TitleStyle"
+            android:text="信息" />
 
         <View
             android:id="@+id/top_view"
@@ -46,18 +42,20 @@
                     <Button
                         android:id="@+id/name"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:background="@color/transparent"/>
                     <Button
                         android:id="@+id/address"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"/>
+                        android:layout_alignParentRight="true"
+                        android:background="@color/transparent"/>
                 </RelativeLayout>
 
                 <TextView
                     android:id="@+id/main_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    style="@style/TextStyle"
+                    />
             </LinearLayout>
         </ScrollView>
     </RelativeLayout>
