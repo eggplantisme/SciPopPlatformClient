@@ -85,7 +85,7 @@ public class HttpHelper {
             } else if (way == POST) {
                 connection.setRequestMethod("POST");
                 connection.setConnectTimeout(10 * 1000);
-                connection.setRequestProperty("Content-Length", String.valueOf(data.length()));
+                connection.setRequestProperty("Content-Length", String.valueOf(data.getBytes().length));
                 //设置请求内容
                 connection.setDoOutput(true);
                 connection.getOutputStream().write(data.getBytes());

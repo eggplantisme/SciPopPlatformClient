@@ -54,7 +54,28 @@
 
             <category android:name="android.intent.category.DEFAULT" />
         </activity>
-        <activity android:name=".AdminActivity"></activity>
+        <activity
+            android:name=".AdminActivity"
+            android:launchMode="singleInstance">
+            <action android:name="android.intent.action.EDIT" />
+
+            <category android:name="android.intent.category.DEFAULT" />
+        </activity>
+        <activity
+            android:name=".proAdd"
+            android:launchMode="singleInstance">
+            <action android:name="android.intent.action.EDIT" />
+
+            <category android:name="android.intent.category.DEFAULT" />
+        </activity>
+        <activity
+            android:name=".proEdit"
+            android:launchMode="singleInstance">
+            <action android:name="android.intent.action.EDIT" />
+
+            <category android:name="android.intent.category.DEFAULT" />
+        </activity>
+        <activity android:name=".proUpdate"></activity>
     </application>
 
 </manifest>

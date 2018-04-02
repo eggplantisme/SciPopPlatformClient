@@ -11,6 +11,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,19 +22,13 @@ import android.widget.Toast;
 import com.baoyz.widget.PullRefreshLayout;
 
 import static android.R.attr.id;
-import static com.eggplant.admin.scipopplatform.Configure.BASE;
-import static com.eggplant.admin.scipopplatform.Configure.NORMAL;
-import static com.eggplant.admin.scipopplatform.Configure.PROFESSION;
-import static com.eggplant.admin.scipopplatform.Configure.SCIBASE;
-import static com.eggplant.admin.scipopplatform.Configure.SCIINFO;
 
-
+import static com.eggplant.admin.scipopplatform.Configure.*;
 
 
 public class MainActivity extends AppCompatActivity {
     public SharedPreferences sharedPreferences;
-    public static final String PREFERENCE_NAME = "user";
-    public static final int MODE = MODE_PRIVATE;
+
 
     private TextView sci_info;
     private TextView sci_base;
@@ -52,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        sharedPreferences = getSharedPreferences(PREFERENCE_NAME, MODE);
+        sharedPreferences = getSharedPreferences(USER_PREFERENCE_NAME, MODE);
 
         fragmentManager = getFragmentManager();
         bindViews();
@@ -90,48 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        /*
-        右上角按钮点击
-        */
-        top_title.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int userClass = sharedPreferences.getInt("class", 0);//如果没有class， 默认给0
-                switch (userClass) {
-                    case NORMAL:
-                        break;
-                    case PROFESSION:
-                        //TODO 根据不同角色，选择menu后，设定按钮功能，需要在管理员功能完善之后实现
-                        switch (item.getItemId()) {
-                            case R.id.pro_create:
-                                Toast.makeText(MainActivity.this, "创建功能暂时没做", Toast.LENGTH_SHORT).show();
-                                break;
-                            case R.id.pro_change:
-                                break;
-                            case R.id.pro_delete:
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-                    case BASE:
-                        switch (item.getItemId()) {
-                            case R.id.base_create:
-                                break;
-                            case R.id.base_change:
-                                break;
-                            case R.id.base_delete:
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                return false;
-            }
-        });
+
 
 
         /*
@@ -159,9 +113,10 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-
-
+        /*
+        支持右上角menu
+         */
+        setSupportActionBar(top_title);
     }
 
     /*
@@ -183,14 +138,64 @@ public class MainActivity extends AppCompatActivity {
             default:
                 break;
         }
+        /*
+        右上角按钮点击
+        */
+        top_title.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int userClass = sharedPreferences.getInt("class", 0);//如果没有class， 默认给0
+                Log.v("class", String.valueOf(userClass));
+                Intent intent;
+                switch (userClass) {
+                    case NORMAL:
+                        break;
+                    case PROFESSION:
+                        switch (item.getItemId()) {
+                            case R.id.pro_create:
+                                intent = new Intent(MainActivity.this, proAdd.class);
+                                MainActivity.this.startActivity(intent);
+                                break;
+                            case R.id.pro_change:
+                                intent = new Intent(MainActivity.this, proEdit.class);
+                                MainActivity.this.startActivity(intent);
+                                break;
+                            case R.id.pro_delete:
+                                intent = new Intent(MainActivity.this, proEdit.class);
+                                MainActivity.this.startActivity(intent);
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    case BASE:
+                        //TODO 基地的增删改
+                        switch (item.getItemId()) {
+                            case R.id.base_create:
+                                break;
+                            case R.id.base_change:
+                                break;
+                            case R.id.base_delete:
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
+
+
         return true;
     }
 
 
 
     /*
-    TODO
-     这里只有用户姓名的获取
+    TODO 这里只有用户姓名的获取
      至于图片和分数，电话信息服务端没有接口
      暂时搁置
      图片还没做*/

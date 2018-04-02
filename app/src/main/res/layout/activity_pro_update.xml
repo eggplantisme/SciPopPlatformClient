@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.eggplant.admin.scipopplatform.proAdd"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/title_upadte"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:hint="标题" />
+
+    <EditText
+        android:id="@+id/content_update"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9"
+        android:gravity="top"
+        android:hint="正文"
+        android:inputType="textMultiLine" />
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="0dp">
+
+        <Button
+            android:id="@+id/update"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="提交" />
+
+        <Button
+            android:id="@+id/update_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="清除" />
+
+        <Spinner
+            android:id="@+id/Update_baseChoose"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"></Spinner>
+    </LinearLayout>
+
+</LinearLayout>

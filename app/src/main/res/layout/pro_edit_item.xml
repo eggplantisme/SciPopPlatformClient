@@ -2,19 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <TextView
-        android:id="@+id/tempUserName"
-        style="@style/ListTextItem"
-        android:layout_weight="1" />
-
-    <TextView
-        android:id="@+id/tempUserPhone"
+        android:id="@+id/infoId"
         style="@style/ListTextItem"
         android:layout_weight="1"/>
-
     <TextView
-        android:id="@+id/tempUserClass"
+        android:id="@+id/infoTitle"
         style="@style/ListTextItem"
-        android:layout_weight="1" />
+        android:layout_weight="1"/>
+    <TextView
+        android:id="@+id/infoTime"
+        style="@style/ListTextItem"
+        android:layout_weight="1"/>
+    <TextView
+        android:id="@+id/baseName"
+        style="@style/ListTextItem"
+        android:layout_weight="1"/>
 </LinearLayout>

@@ -1,5 +1,7 @@
 package com.eggplant.admin.scipopplatform;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * Created by admin on 2018/3/10.
  */
@@ -32,6 +34,8 @@ public class Configure {
     public static final int NEED_WAIT = 8;
     public static final int ADMIN = 11;
     public static final int NOT_ADMIN = 12;
+    public static final int DIFFERENT_CLASS = 13;
+    public static final int NO_RIGHT = 14;
 
 
     /*
@@ -47,5 +51,9 @@ public class Configure {
     public static final int NORMAL = 0;
     public static final int PROFESSION = 1;
     public static final int BASE = 2;
+
+    public static final String SERVER = "http://192.168.199.127:8080/SciencePop";
+    public static final String USER_PREFERENCE_NAME = "user";
+    public static final int MODE = MODE_PRIVATE;
 
 }

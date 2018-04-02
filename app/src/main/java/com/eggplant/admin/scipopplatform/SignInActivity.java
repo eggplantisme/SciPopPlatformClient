@@ -41,8 +41,7 @@ public class SignInActivity extends AppCompatActivity {
     /*
     * 用sharedPreference存储用户信息
     * */
-    public static final String PREFERENCE_NAME = "user";
-    public static final int MODE = MODE_PRIVATE;
+
     public SharedPreferences sharedPreferences;
     /*
     登陆post数据与服务器连接
@@ -204,12 +203,15 @@ public class SignInActivity extends AppCompatActivity {
                     case WRONG_CODE:
                         Toast.makeText(getApplicationContext(), "网络连接错误", Toast.LENGTH_SHORT).show();
                         break;
+                    case DIFFERENT_CLASS:
+                        Toast.makeText(getApplicationContext(), "用户类别错误", Toast.LENGTH_SHORT).show();
+                        break;
                     case RIGHT:
                         Bundle userInfo = message.getData();
                         /*
                         将用户姓名存储到sharedPreference中
                          */
-                        sharedPreferences = getSharedPreferences(PREFERENCE_NAME,MODE);
+                        sharedPreferences = getSharedPreferences(USER_PREFERENCE_NAME,MODE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("name", userInfo.getString("name"));
                         editor.putString("pass", userInfo.getString("pass"));

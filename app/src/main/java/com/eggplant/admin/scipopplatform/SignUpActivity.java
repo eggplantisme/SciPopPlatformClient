@@ -29,25 +29,9 @@ import java.util.regex.Pattern;
 
 import static android.R.id.edit;
 import static android.R.id.message;
-import static com.eggplant.admin.scipopplatform.Configure.BASE;
-import static com.eggplant.admin.scipopplatform.Configure.DIFFERENT_PASS;
-import static com.eggplant.admin.scipopplatform.Configure.NEED_WAIT;
-import static com.eggplant.admin.scipopplatform.Configure.NORMAL;
-import static com.eggplant.admin.scipopplatform.Configure.PROFESSION;
-import static com.eggplant.admin.scipopplatform.Configure.REPEATEDNAME;
-import static com.eggplant.admin.scipopplatform.Configure.RIGHT;
-import static com.eggplant.admin.scipopplatform.Configure.UNKNOWN_WRONG;
-import static com.eggplant.admin.scipopplatform.Configure.WRONG_CLASS;
-import static com.eggplant.admin.scipopplatform.Configure.WRONG_CODE;
-import static com.eggplant.admin.scipopplatform.Configure.WRONG_NAME;
-import static com.eggplant.admin.scipopplatform.Configure.WRONG_NAMEFORMAT;
-import static com.eggplant.admin.scipopplatform.Configure.WRONG_PASS;
-import static com.eggplant.admin.scipopplatform.Configure.WRONG_PASSFORMAT;
-import static com.eggplant.admin.scipopplatform.Configure.WRONG_PHONE;
+import static com.eggplant.admin.scipopplatform.Configure.*;
 import static com.eggplant.admin.scipopplatform.HttpHelper.*;
 import static com.eggplant.admin.scipopplatform.R.id.userClass;
-import static com.eggplant.admin.scipopplatform.SignInActivity.MODE;
-import static com.eggplant.admin.scipopplatform.SignInActivity.PREFERENCE_NAME;
 
 /**
  * Created by admin on 2018/3/11.
@@ -58,8 +42,7 @@ public class SignUpActivity extends AppCompatActivity {
     /*
     * 用sharedPreference存储用户姓名
     * */
-    public static final String PREFERENCE_NAME = "user";
-    public static final int MODE = MODE_PRIVATE;
+
     public SharedPreferences sharedPreferences;
     /*
     注册网络连接
@@ -242,7 +225,7 @@ public class SignUpActivity extends AppCompatActivity {
                        /*
                         将用户姓名密码存储到sharedPreference中
                          */
-                        sharedPreferences = getSharedPreferences(PREFERENCE_NAME,MODE);
+                        sharedPreferences = getSharedPreferences(USER_PREFERENCE_NAME,MODE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("name", userInfo.getString("name"));
                         editor.putString("pass", userInfo.getString("pass"));

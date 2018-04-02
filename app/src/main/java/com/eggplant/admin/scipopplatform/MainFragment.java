@@ -73,18 +73,18 @@ public class MainFragment extends Fragment {
             @Override
             public void run() {
                 try {
-                    responseData = new JSONArray(Connect(url, null, GET));
+                    String res = Connect(url, null, GET);
+                    Message message = Message.obtain(handler);
+                    if (res == null) {
+                        message.what = WRONG_CODE;
+                        message.sendToTarget();
+                    } else {
+                        responseData = new JSONArray(res);
+                        message.what = RIGHT;
+                        message.sendToTarget();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
-
-                Message message = Message.obtain(handler);
-                if (responseData == null) {
-                    message.what = WRONG_CODE;
-                    message.sendToTarget();
-                } else {
-                    message.what = RIGHT;
-                    message.sendToTarget();
                 }
             }
         };
@@ -96,11 +96,6 @@ public class MainFragment extends Fragment {
         context = getActivity();
         final ListView mainList = (ListView)view.findViewById(R.id.mainList);
         connect(url);
-        /*
-        TextView txt_content = (TextView)view.findViewById(R.id.txt_content);
-        txt_content.setText(url);
-        txt_content.setBackgroundColor(0xFFFF0000);
-        */
         handler = new Handler() {
             public void handleMessage(Message message) {
                 switch (message.what) {
@@ -132,7 +127,7 @@ public class MainFragment extends Fragment {
     将网络返回数据加载到列表中
      */
     protected void loadList(final Context context, ListView mainList, JSONArray responseData) {
-
+        data.clear();
         try {
             for (int i = 0; i < responseData.length(); i++) {
                 JSONObject jsonObject;
