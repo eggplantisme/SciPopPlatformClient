@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id = "@+id/pro_create"
-        android:title="新建"/>
+        android:title="新建文章"/>
     <item
         android:id="@+id/pro_change"
-        android:title="更改"/>
+        android:title="更改文章"/>
     <item
         android:id="@+id/pro_delete"
-        android:title="删除"/>
+        android:title="删除文章"/>
 </menu>

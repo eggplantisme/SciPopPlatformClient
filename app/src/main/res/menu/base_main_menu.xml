@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id = "@+id/base_create"
-        android:title="新建"/>
+        android:title="新建基地"/>
     <item
         android:id="@+id/base_change"
-        android:title="更改"/>
+        android:title="更改基地"/>
     <item
         android:id="@+id/base_delete"
-        android:title="删除"/>
+        android:title="删除基地"/>
 </menu>

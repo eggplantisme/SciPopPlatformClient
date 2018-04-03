@@ -45,7 +45,7 @@ public class proUpdate extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pro_update);
-        //TODO 编辑功能
+
         bindView();
 
         Intent intent = getIntent();

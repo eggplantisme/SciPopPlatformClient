@@ -172,10 +172,16 @@ public class MainActivity extends AppCompatActivity {
                         //TODO 基地的增删改
                         switch (item.getItemId()) {
                             case R.id.base_create:
+                                intent = new Intent(MainActivity.this, baseAdd.class);
+                                MainActivity.this.startActivity(intent);
                                 break;
                             case R.id.base_change:
+                                intent = new Intent(MainActivity.this, baseEdit.class);
+                                MainActivity.this.startActivity(intent);
                                 break;
                             case R.id.base_delete:
+                                intent = new Intent(MainActivity.this, baseEdit.class);
+                                MainActivity.this.startActivity(intent);
                                 break;
                             default:
                                 break;

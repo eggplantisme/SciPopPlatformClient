@@ -16,6 +16,8 @@ import static com.eggplant.admin.scipopplatform.Configure.*;
 import static com.eggplant.admin.scipopplatform.HttpHelper.Connect;
 import static com.eggplant.admin.scipopplatform.HttpHelper.GET;
 import static com.eggplant.admin.scipopplatform.HttpHelper.POST;
+import static com.eggplant.admin.scipopplatform.R.id.base;
+import static com.eggplant.admin.scipopplatform.R.id.basename;
 import static com.eggplant.admin.scipopplatform.R.id.infoId;
 
 /**
@@ -62,7 +64,7 @@ public class AdminUtils {
                     }
                     if (res == null) {
                         message.what = WRONG_CODE;
-                        message.sendToTarget();
+                        handler.sendMessage(message);
                     } else {
                         message.what = RIGHT;
                         handler.sendMessage(message);
@@ -89,15 +91,15 @@ public class AdminUtils {
                     Message message = Message.obtain(handler);
                     if (res == null) {
                         message.what = WRONG_CODE;
-                        message.sendToTarget();
+                        handler.sendMessage(message);
                     } else {
                         JSONObject jsonObject = new JSONObject(res);
                         if (jsonObject.getString("update").equals("yes")) {
                             message.what = RIGHT;
-                            message.sendToTarget();
+                            handler.sendMessage(message);
                         } else if (jsonObject.getString("update").equals("no")) {
                             message.what = NO_RIGHT;
-                            message.sendToTarget();
+                            handler.sendMessage(message);
                         }
                     }
                 } catch (Exception e) {
@@ -120,15 +122,15 @@ public class AdminUtils {
                     Message message = Message.obtain(handler);
                     if (res == null) {
                         message.what = WRONG_CODE;
-                        message.sendToTarget();
+                        handler.sendMessage(message);
                     } else {
                         JSONObject jsonObject = new JSONObject(res);
                         if (jsonObject.getString("update").equals("yes")) {
                             message.what = RIGHT;
-                            message.sendToTarget();
+                            handler.sendMessage(message);
                         } else if (jsonObject.getString("update").equals("no")) {
                             message.what = NO_RIGHT;
-                            message.sendToTarget();
+                            handler.sendMessage(message);
                         }
                     }
                 } catch (Exception e) {
@@ -153,15 +155,15 @@ public class AdminUtils {
                     Message message = Message.obtain(handler);
                     if (res == null) {
                         message.what = WRONG_CODE;
-                        message.sendToTarget();
+                        handler.sendMessage(message);
                     } else {
                         JSONObject jsonObject = new JSONObject(res);
                         if (jsonObject.getString("update").equals("yes")) {
                             message.what = RIGHT;
-                            message.sendToTarget();
+                            handler.sendMessage(message);
                         } else if (jsonObject.getString("update").equals("no")) {
                             message.what = NO_RIGHT;
-                            message.sendToTarget();
+                            handler.sendMessage(message);
                         }
                     }
                 } catch (Exception e) {
@@ -175,14 +177,101 @@ public class AdminUtils {
     /*
     科普基地的添加
      */
-    public static void baseAdd(final String basename, final String baseInfo, final String baseAddress, final String baseContact, String baseAdminName, Handler handler) {}
+    public static void baseAdd(final String basename, final String baseInfo, final String baseAddress, final String baseContact, final String baseAdminName, final Handler handler) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Date curdate = new Date(System.currentTimeMillis());
+                String url = SERVER + "/addSciPopBase";
+                String body = "baseName=" + basename + "&baseInfo=" + baseInfo + "&address=" + baseAddress + "&contactNumber=" + baseContact + "&baseAdminName=" + baseAdminName;
+                try {
+                    String res = Connect(url, body, POST);
+                    Message message = Message.obtain(handler);
+                    if (res == null) {
+                        message.what = WRONG_CODE;
+                        handler.sendMessage(message);
+                    } else {
+                        JSONObject jsonObject = new JSONObject(res);
+                        if (jsonObject.getString("update").equals("yes")) {
+                            message.what = RIGHT;
+                            handler.sendMessage(message);
+                        } else if (jsonObject.getString("update").equals("no")) {
+                            message.what = NO_RIGHT;
+                            handler.sendMessage(message);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        new Thread(runnable).start();
+
+    }
     /*
     科普基地的删除
      */
-    public static void baseDelete(final String baseId, Handler handler) {}
+    public static void baseDelete(final String baseId, final Handler handler) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                String url = SERVER + "/deleteSciPopBase/" + baseId;
+                try {
+                    String res = Connect(url, null, GET);
+                    Message message = Message.obtain(handler);
+                    if (res == null) {
+                        message.what = WRONG_CODE;
+                        handler.sendMessage(message);
+                    } else {
+                        JSONObject jsonObject = new JSONObject(res);
+                        if (jsonObject.getString("update").equals("yes")) {
+                            message.what = RIGHT;
+                            handler.sendMessage(message);
+                        } else if (jsonObject.getString("update").equals("no")) {
+                            message.what = NO_RIGHT;
+                            handler.sendMessage(message);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        new Thread(runnable).start();
+
+    }
     /*
     科普基地的修改
      */
-    public static void baseUpdate(final String basename, final String baseInfo, final String baseAddress, final String baseContact, String baseAdminName, Handler handler) {}
+    public static void baseUpdate(final String baseId, final String basename, final String baseInfo, final String baseAddress, final String baseContact, final String baseAdminName, final Handler handler) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Date curdate = new Date(System.currentTimeMillis());
+                String url = SERVER + "/updateSciPopBase";
+                String body = "baseId=" + baseId + "&baseName=" + basename + "&baseInfo=" + baseInfo + "&address=" + baseAddress + "&contactNumber=" + baseContact + "&baseAdminName=" + baseAdminName;
+                try {
+                    String res = Connect(url, body, POST);
+                    Message message = Message.obtain(handler);
+                    if (res == null) {
+                        message.what = WRONG_CODE;
+                        handler.sendMessage(message);
+                    } else {
+                        JSONObject jsonObject = new JSONObject(res);
+                        if (jsonObject.getString("update").equals("yes")) {
+                            message.what = RIGHT;
+                            handler.sendMessage(message);
+                        } else if (jsonObject.getString("update").equals("no")) {
+                            message.what = NO_RIGHT;
+                            handler.sendMessage(message);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        new Thread(runnable).start();
+    }
 
 }

@@ -109,10 +109,12 @@ public class proAdd extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sharedPreferences = getSharedPreferences(PREFERENCE_NAME, MODE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("title", title_edit.getText().toString());
                 editor.putString("content", content_edit.getText().toString());
                 editor.commit();
+                Toast.makeText(getApplicationContext(), "保存成功", Toast.LENGTH_SHORT).show();
             }
         });
 
