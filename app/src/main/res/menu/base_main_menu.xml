@@ -9,4 +9,7 @@
     <item
         android:id="@+id/base_delete"
         android:title="删除基地"/>
+    <item
+        android:id="@+id/add_score"
+        android:title="添加积分"/>
 </menu>

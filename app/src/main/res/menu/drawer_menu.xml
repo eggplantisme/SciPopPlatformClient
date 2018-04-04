@@ -5,9 +5,5 @@
             android:id = "@+id/score"
             android:icon="@mipmap/score"
             android:title="分数"/>
-        <item
-            android:id="@+id/sign_out"
-            android:icon="@mipmap/signout"
-            android:title="退出"/>
     </group>
 </menu>

@@ -10,11 +10,4 @@
         style="@style/TextAppearance.AppCompat.Body1"
         android:padding="5dp"
         android:text="个人姓名"/>
-    <TextView
-        android:id="@+id/person_score"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="3dp"
-        android:text="个人分数"/>
-
 </LinearLayout>

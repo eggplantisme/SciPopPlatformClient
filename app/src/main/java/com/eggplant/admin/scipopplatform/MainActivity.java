@@ -2,13 +2,17 @@ package com.eggplant.admin.scipopplatform;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -21,13 +25,22 @@ import android.widget.Toast;
 
 import com.baoyz.widget.PullRefreshLayout;
 
+import org.json.JSONObject;
+
+import static android.R.attr.data;
 import static android.R.attr.id;
 
+import static android.R.id.message;
 import static com.eggplant.admin.scipopplatform.Configure.*;
+import static com.eggplant.admin.scipopplatform.HttpHelper.Connect;
+import static com.eggplant.admin.scipopplatform.HttpHelper.GET;
 
 
 public class MainActivity extends AppCompatActivity {
     public SharedPreferences sharedPreferences;
+
+    private Handler Scorehandler;
+    private int Score;
 
 
     private TextView sci_info;
@@ -98,14 +111,8 @@ public class MainActivity extends AppCompatActivity {
                 int id = item.getItemId();
                 switch (id) {
                     case R.id.score:
-                        //TODO 积分功能
-                        Toast.makeText(MainActivity.this, "积分功能暂时没做", Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.sign_out:
-                        //清除数据
-                        sharedPreferences.edit().clear().commit();
-                        Intent intent = new Intent(MainActivity.this, SignInActivity.class);
-                        MainActivity.this.startActivity(intent);
+                        String name = sharedPreferences.getString("name", null);
+                        getScore(name);
                         break;
                     default:
                         break;
@@ -113,10 +120,69 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+        Scorehandler = new Handler() {
+            public void handleMessage(Message message) {
+                switch (message.what) {
+                    case NO_RIGHT:
+                        Toast.makeText(getApplicationContext(), "权限不足", Toast.LENGTH_SHORT).show();
+                        break;
+                    case RIGHT:
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+                        dialog.setIcon(R.mipmap.sci_pop);
+                        dialog.setTitle("分数：" + Score);
+                        dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+                        dialog.setNegativeButton("知道了", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                        dialog.show();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
         /*
         支持右上角menu
          */
         setSupportActionBar(top_title);
+    }
+
+    private void getScore(final String name) {
+        Score = 0;
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                int info = NO_RIGHT;
+                try {
+                    String url = SERVER + "/getScore/" + name;
+                    String res = Connect(url, null, GET);
+                    Message message = Message.obtain(Scorehandler);
+                    if (res == null) {
+                        message.what = UNKNOWN_WRONG;
+                    } else {
+                        JSONObject jsonObject = new JSONObject(res);
+                        info = jsonObject.getInt("info");
+                        if (info == RIGHT) {
+                            Score = jsonObject.getInt("score");
+                        } else {
+                            info = NO_RIGHT;
+                        }
+                    }
+                    message.what = info;
+                    Scorehandler.sendMessage(message);
+                }catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        new Thread(runnable).start();
     }
 
     /*
@@ -182,6 +248,10 @@ public class MainActivity extends AppCompatActivity {
                                 intent = new Intent(MainActivity.this, baseEdit.class);
                                 MainActivity.this.startActivity(intent);
                                 break;
+                            case R.id.add_score:
+                                intent = new Intent(MainActivity.this, ScoreAddActivity.class);
+                                MainActivity.this.startActivity(intent);
+                                break;
                             default:
                                 break;
                         }
@@ -192,21 +262,15 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-
         return true;
     }
 
 
 
     /*
-    TODO 这里只有用户姓名的获取
-     至于图片和分数，电话信息服务端没有接口
-     暂时搁置
-     图片还没做*/
+    加载当前登陆用户的名字*/
     private void loadLeftDrawer() {
         String name = sharedPreferences.getString("name", null);
-        //动态加载头部
         View headerLayout = leftDrawer.inflateHeaderView(R.layout.drawer_head);
         TextView left_draw_name = (TextView)headerLayout.findViewById(R.id.person_name);
         left_draw_name.setText(name);
