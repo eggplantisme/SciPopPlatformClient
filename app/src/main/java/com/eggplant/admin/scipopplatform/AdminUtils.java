@@ -9,8 +9,11 @@ import org.json.JSONObject;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
+import static android.R.attr.data;
 import static android.R.id.message;
 import static com.eggplant.admin.scipopplatform.Configure.*;
 import static com.eggplant.admin.scipopplatform.HttpHelper.Connect;
@@ -29,6 +32,7 @@ public class AdminUtils {
     public static List<String> baseIdList;
     /*
     加载base信息的id和name部分进入两个List
+    异步版
      */
     public static void loadBase(final Handler handler) {
         baseIdList = new ArrayList<>();
@@ -76,6 +80,34 @@ public class AdminUtils {
         };
         new Thread(runnable).start();
     }
+    /*
+    加载base信息的id和name部分进入两个List
+    同步版
+     */
+    public static void loadBaseSync() {
+        baseIdList = new ArrayList<>();
+        baseNameList = new ArrayList<>();
+        baseIdList.add("-1");
+        baseNameList.add("地球");
+                try {
+                    String url = SERVER + "/getBaseList";
+                    String res = Connect(url, null, GET);
+                    JSONArray baseList = new JSONArray(res);
+                    for (int i = 0; i < baseList.length(); i++) {
+                        try {
+                            JSONObject jsonObject = baseList.getJSONObject(i);
+                            if (!jsonObject.getString("id").equals("-1")) {
+                                baseNameList.add(jsonObject.getString("title"));
+                                baseIdList.add(String.valueOf(jsonObject.getInt("id")));
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
     /*
     科普信息的添加
      */
@@ -173,6 +205,42 @@ public class AdminUtils {
         };
         new Thread(runnable).start();
     }
+    /*
+    获取专家会员的全部文章
+    排序用
+     */
+    public static void loadProPageList(final String name, final Handler handler, final List<Map<String, Object>> data) {
+                try {
+                    String url = SERVER + "/getSciPopInfos/" + name;
+                    String res = Connect(url, null, GET);
+                    Message message = Message.obtain(handler);
+                    if (res == null) {
+                        message.what = WRONG_CODE;
+                    } else {
+                        JSONArray ListData;
+                        ListData = new JSONArray(res);
+                        data.clear();
+                        for (int i = 0; i < ListData.length(); i++) {
+                            JSONObject jsonObject;
+                            jsonObject = ListData.getJSONObject(i);
+                            Map<String, Object> temp = new LinkedHashMap<>();
+                            temp.put("infoId", jsonObject.get("infoId"));
+                            temp.put("title", jsonObject.get("title"));
+                            temp.put("content", jsonObject.get("content"));
+                            temp.put("lastTime", jsonObject.get("lastTime").toString());
+                            temp.put("baseName", jsonObject.get("baseId"));//暂时用baseId带替baseName
+                            data.add(temp);
+                        }
+                        message.what = RIGHT;
+                    }
+                    if (handler != null) {
+                        handler.sendMessage(message);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
 
     /*
     科普基地的添加

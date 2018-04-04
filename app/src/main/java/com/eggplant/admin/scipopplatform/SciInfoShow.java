@@ -18,9 +18,13 @@ import org.json.JSONObject;
 import java.util.Date;
 
 import static android.R.attr.id;
+import static com.eggplant.admin.scipopplatform.AdminUtils.baseIdList;
+import static com.eggplant.admin.scipopplatform.AdminUtils.baseNameList;
+import static com.eggplant.admin.scipopplatform.AdminUtils.loadBaseSync;
 import static com.eggplant.admin.scipopplatform.Configure.*;
 import static com.eggplant.admin.scipopplatform.HttpHelper.Connect;
 import static com.eggplant.admin.scipopplatform.HttpHelper.GET;
+import static com.eggplant.admin.scipopplatform.R.id.baseId;
 
 public class SciInfoShow extends AppCompatActivity {
     private Handler handler;
@@ -33,6 +37,7 @@ public class SciInfoShow extends AppCompatActivity {
     private Button address;
 
     private Date lastDate;
+    private String baseName;
     private int baseId;
 
     protected void connect(final String Infoid) {
@@ -42,18 +47,25 @@ public class SciInfoShow extends AppCompatActivity {
                 String url = getResources().getString(R.string.server) + "/getSciPopInfo/" + Infoid;
                 String responseData = Connect(url, null, GET);
                 try {
-                    response = new JSONObject(responseData);
+
+                    Message message = Message.obtain(handler);
+                    if (responseData == null) {
+                        message.what = WRONG_CODE;
+                        message.sendToTarget();
+                    } else {
+                        response = new JSONObject(responseData);
+                        baseId = Integer.parseInt(response.get("baseId").toString());
+                        loadBaseSync();
+                        int index = baseIdList.indexOf(response.get("baseId").toString());
+                        baseName = baseNameList.get(index);
+                        message.what = RIGHT;
+                        message.sendToTarget();
+                    }
+
                 } catch (Exception e){
                     e.printStackTrace();
                 }
-                Message message = Message.obtain(handler);
-                if (responseData == null) {
-                    message.what = WRONG_CODE;
-                    message.sendToTarget();
-                } else {
-                    message.what = RIGHT;
-                    message.sendToTarget();
-                }
+
             }
         };
         new Thread(runnable).start();
@@ -69,8 +81,8 @@ public class SciInfoShow extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         Infoid = bundle.getString("id");
-        connect(Infoid);
 
+        connect(Infoid);
         handler = new Handler() {
             public void handleMessage(Message message) {
                 switch (message.what) {
@@ -82,9 +94,8 @@ public class SciInfoShow extends AppCompatActivity {
                             title.setText(response.getString("title"));
                             main_info.setText(response.getString("content"));
                             name.setText(response.getString("writterName") + "\n" + response.getString("lastTime"));
-                            address.setText("前往基地详情");
-                            baseId = response.getInt("baseId");
-                            //TODO 根据baseId加载基地名字，然后跳转到基地详情页面
+                            address.setText(baseName);
+
                             address.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {

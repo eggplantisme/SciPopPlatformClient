@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id = "@+id/extra"
-        android:title="管理员额外功能"/>
+        android:id = "@+id/pagesort"
+        android:title="文章数排名"/>
 </menu>

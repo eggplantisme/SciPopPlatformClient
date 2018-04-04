@@ -76,7 +76,9 @@ public class proEdit extends AppCompatActivity {
                             temp.put("title", jsonObject.get("title"));
                             temp.put("content", jsonObject.get("content"));
                             temp.put("lastTime", jsonObject.get("lastTime").toString());
-                            temp.put("baseName", jsonObject.get("baseId"));//暂时用baseId带替baseName
+                            loadBaseSync();
+                            int index = baseIdList.indexOf(jsonObject.get("baseId").toString());
+                            temp.put("baseName", baseNameList.get(index));//暂时用baseId带替baseName
                             data.add(temp);
                         }
                         message.what = RIGHT;
@@ -101,7 +103,6 @@ public class proEdit extends AppCompatActivity {
         name = sharedPreferences.getString("name", "");
 
         bindView();
-
         loadList(name);
         handler = new Handler() {
             public void handleMessage(Message message) {
@@ -113,7 +114,6 @@ public class proEdit extends AppCompatActivity {
                         SimpleAdapter simpleAdapter = new SimpleAdapter(getApplicationContext(), data, R.layout.pro_edit_item,
                                 new String[] {"infoId", "title", "lastTime", "baseName"}, new int[] {R.id.infoId, R.id.infoTitle, R.id.infoTime, R.id.baseName});
                         proList.setAdapter(simpleAdapter);
-
                         proRefresh.setRefreshing(false);
                         break;
                     default:

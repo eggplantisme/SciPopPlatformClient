@@ -169,7 +169,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                         break;
                     case BASE:
-                        //TODO 基地的增删改
                         switch (item.getItemId()) {
                             case R.id.base_create:
                                 intent = new Intent(MainActivity.this, baseAdd.class);

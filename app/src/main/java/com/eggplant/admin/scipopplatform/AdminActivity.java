@@ -123,20 +123,14 @@ public class AdminActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
         //获取待检查用户信息
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         tempUserList = bundle.getString("tempUserList");
 
         bindView();
         loadList(tempUserList);
 
-        adminTop.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                //TODO 管理员的其他功能
-                return false;
-            }
-        });
+
 
         pullRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
@@ -187,6 +181,22 @@ public class AdminActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.admin_menu, menu);
+        adminTop.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.pagesort:
+                        Intent intent1 = new Intent(AdminActivity.this, SortByPagesActivity.class);
+                        AdminActivity.this.startActivity(intent1);
+                        break;
+                    default:
+                        break;
+                }
+                Intent intent1 = new Intent(AdminActivity.this, SortByPagesActivity.class);
+                startActivity(intent1);
+                return false;
+            }
+        });
         return true;
     }
 
@@ -249,8 +259,5 @@ public class AdminActivity extends AppCompatActivity {
                 dialog.show();
             }
         });
-
-
-
     }
 }
